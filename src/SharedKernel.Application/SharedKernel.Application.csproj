@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageDescription>SharedKernel Application - CQRS patterns, behaviors, and application services for Clean Architecture applications</PackageDescription>

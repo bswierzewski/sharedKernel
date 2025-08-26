@@ -14,8 +14,6 @@ namespace SharedKernel;
 /// - Manages domain events for the aggregate
 /// - Has global identity (unlike entities inside aggregate)
 /// - Controls access to internal entities
-/// 
-/// Examples: User (aggregate root), Competition (aggregate root), League (aggregate root)
 /// </remarks>
 public abstract class AggregateRoot<TId> : Entity<TId>
 {

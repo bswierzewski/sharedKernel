@@ -12,8 +12,6 @@ namespace SharedKernel;
 /// - Descriptive: Use past tense names (UserRegistered, OrderPlaced)
 /// - Contain only necessary data for event handlers
 /// - Occur within aggregate boundaries
-/// 
-/// Examples: UserRegistered, CompetitionFinished, PaymentProcessed
 /// </remarks>
 public abstract class DomainEvent : IDomainEvent
 {

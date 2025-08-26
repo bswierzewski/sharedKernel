@@ -1,16 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using SharedKernel.Application.Abstractions;
+using SharedKernel.Application.Interfaces;
 
 namespace SharedKernel.Infrastructure.Interceptors;
 
 public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
 {
-    private readonly IUser _user;
+    private readonly IUser? _user;
     private readonly TimeProvider _dateTime;
 
-    public AuditableEntityInterceptor(IUser user, TimeProvider dateTime)
+    public AuditableEntityInterceptor(IUser? user, TimeProvider dateTime)
     {
         _user = user;
         _dateTime = dateTime;
@@ -43,11 +43,11 @@ public sealed class AuditableEntityInterceptor : SaveChangesInterceptor
                 
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = _user.Id;
+                    entry.Entity.CreatedBy = _user?.Id;
                     entry.Entity.Created = utcNow;
                 }
                 
-                entry.Entity.LastModifiedBy = _user.Id;
+                entry.Entity.LastModifiedBy = _user?.Id;
                 entry.Entity.LastModified = utcNow;
             }
         }

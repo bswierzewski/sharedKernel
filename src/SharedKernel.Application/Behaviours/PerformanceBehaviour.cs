@@ -1,7 +1,7 @@
-using SharedKernel.Application.Abstractions;
+using System.Diagnostics;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
+using SharedKernel.Application.Interfaces;
 
 namespace SharedKernel.Application.Behaviours;
 
@@ -10,9 +10,9 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 {
     private readonly Stopwatch _timer;
     private readonly ILogger<TRequest> _logger;
-    private readonly IUser _user;
+    private readonly IUser? _user;
 
-    public PerformanceBehaviour(ILogger<TRequest> logger, IUser user)
+    public PerformanceBehaviour(ILogger<TRequest> logger, IUser? user = null)
     {
         _timer = new Stopwatch();
         _logger = logger;
@@ -32,7 +32,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         if (elapsedMilliseconds > 500)
         {
             var requestName = typeof(TRequest).Name;
-            var userId = _user.Id.ToString();
+            var userId = _user?.Id.ToString() ?? string.Empty;
 
             _logger.LogWarning("Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@Request}",
                 requestName, elapsedMilliseconds, userId, request);

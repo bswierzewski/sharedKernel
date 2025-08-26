@@ -1,4 +1,4 @@
-namespace SharedKernel.Application.Abstractions;
+namespace SharedKernel.Application.Interfaces;
 
 public interface IUser
 {

@@ -12,8 +12,6 @@ namespace SharedKernel;
 /// - Can change state while maintaining identity
 /// - Mutable (unlike Value Objects)
 /// - Includes audit fields for tracking creation and modification
-/// 
-/// Examples: User, Competition, Catch, League
 /// </remarks>
 public abstract class Entity<TId>
 {

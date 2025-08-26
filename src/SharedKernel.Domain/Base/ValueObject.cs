@@ -11,14 +11,6 @@
 /// - No Identity: Two value objects with the same values are considered equal
 /// - Replaceable: Can be replaced with another instance having the same values
 /// - Self-validating: Should validate their own invariants
-/// 
-/// Examples: Money, Address, DateRange, Email, Phone Number
-/// 
-/// Usage:
-/// 1. Inherit from this class
-/// 2. Make all properties read-only (private set or init-only)
-/// 3. Implement GetEqualityComponents() to return all properties used for equality
-/// 4. Add validation in constructor to ensure invariants
 /// </remarks>
 public abstract class ValueObject
 {
