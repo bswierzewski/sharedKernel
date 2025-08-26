@@ -10,17 +10,21 @@ Universal shared kernel components for .NET applications following Clean Archite
 This repository contains three NuGet packages that provide essential building blocks for Clean Architecture applications:
 
 ### SharedKernel.Domain
+
 Core domain entities, value objects, and domain events.
 
 **Key Components:**
+
 - `Entity<TId>` - Base class for all entities with audit fields
 - `AggregateRoot<TId>` - Base class for aggregate roots with domain events
 - `IDomainEvent` - Interface for domain events compatible with MediatR
 
-### SharedKernel.Application  
+### SharedKernel.Application
+
 CQRS patterns, behaviors, and application services.
 
 **Key Components:**
+
 - `IUser` - User abstraction interface
 - `ValidationBehaviour<,>` - FluentValidation pipeline behavior
 - `LoggingBehaviour<>` - Request logging pipeline behavior
@@ -29,9 +33,11 @@ CQRS patterns, behaviors, and application services.
 - `ValidationException` - Custom validation exception with error details
 
 ### SharedKernel.Infrastructure
+
 Entity Framework interceptors, extensions, and infrastructure utilities.
 
 **Key Components:**
+
 - `AuditableEntityInterceptor` - Automatically sets audit fields on entities
 - `DispatchDomainEventsInterceptor` - Automatically publishes domain events during SaveChanges
 - Extension methods for dependency injection setup
@@ -42,7 +48,7 @@ Entity Framework interceptors, extensions, and infrastructure utilities.
 
 ```bash
 dotnet add package SharedKernel.Domain
-dotnet add package SharedKernel.Application  
+dotnet add package SharedKernel.Application
 dotnet add package SharedKernel.Infrastructure
 ```
 
@@ -69,9 +75,9 @@ public class Product : Entity<Guid>
 {
     public string Name { get; private set; } = default!;
     public decimal Price { get; private set; }
-    
+
     private Product(Guid id) : base(id) { }
-    
+
     public static Product Create(string name, decimal price)
     {
         var product = new Product(Guid.NewGuid())
@@ -79,7 +85,7 @@ public class Product : Entity<Guid>
             Name = name,
             Price = price
         };
-        
+
         return product;
     }
 }
@@ -89,16 +95,16 @@ public class Order : AggregateRoot<Guid>
 {
     private readonly List<OrderItem> _items = new();
     public IReadOnlyList<OrderItem> Items => _items.AsReadOnly();
-    
+
     private Order(Guid id) : base(id) { }
-    
+
     public static Order Create()
     {
         var order = new Order(Guid.NewGuid());
         order.AddDomainEvent(new OrderCreatedEvent(order.Id));
         return order;
     }
-    
+
     public void AddItem(Product product, int quantity)
     {
         _items.Add(new OrderItem(product.Id, quantity, product.Price));
@@ -119,7 +125,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSharedKernel(); // Registers MediatR behaviors and validation
-        
+
         return services;
     }
 }
@@ -140,19 +146,19 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
-    
+
     public CreateProductCommandHandler(IApplicationDbContext context)
     {
         _context = context;
     }
-    
+
     public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var product = Product.Create(request.Name, request.Price);
-        
+
         _context.Products.Add(product);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return product.Id;
     }
 }
@@ -169,9 +175,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
-    
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(
@@ -187,13 +193,13 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddSharedKernelInfrastructure(); // Registers interceptors and TimeProvider
-        
+
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
-            
-        services.AddScoped<IApplicationDbContext>(provider => 
+
+        services.AddScoped<IApplicationDbContext>(provider =>
             provider.GetRequiredService<ApplicationDbContext>());
-        
+
         return services;
     }
 }
@@ -238,22 +244,27 @@ This SharedKernel follows Clean Architecture principles:
 ## 🔧 Features
 
 ### Automatic Auditing
+
 Entities automatically get audit fields populated:
+
 - `Created` / `CreateBy` - Set when entity is first saved
 - `Modified` / `ModifiedBy` - Updated on every save
 
 ### Domain Events
+
 - Automatic domain event publishing during SaveChanges
 - Integrates seamlessly with MediatR
 - Events are dispatched after successful database transaction
 
 ### CQRS Pipeline Behaviors
+
 - **Validation**: Automatic FluentValidation integration
 - **Logging**: Request/response logging with user context
 - **Performance**: Monitoring for long-running requests (>500ms)
 - **Exception Handling**: Centralized exception logging
 
 ### Central Package Management
+
 - All package versions managed centrally via `Directory.Packages.props`
 - Consistent versioning across all packages
 - Easy dependency updates
@@ -268,6 +279,7 @@ Entities automatically get audit fields populated:
 ## 🚢 Publishing
 
 Packages are automatically published to:
+
 - **GitHub Packages**: On every push to main branch and tags
 - **NuGet.org**: On version tags (v1.0.0, v1.1.0, etc.)
 
@@ -284,28 +296,23 @@ Packages are automatically published to:
 ## 🔨 Development
 
 ### Building Locally
+
 ```bash
 dotnet restore
 dotnet build
 ```
 
 ### Running Tests
+
 ```bash
 dotnet test
 ```
 
 ### Creating Packages
+
 ```bash
 dotnet pack --configuration Release --output ./artifacts/
 ```
-
-## 📝 Examples
-
-Check the `/examples` directory for complete sample implementations:
-- Basic CRUD application
-- Event sourcing with domain events
-- Multi-tenant application
-- API with authentication
 
 ## 🤝 Contributing
 
