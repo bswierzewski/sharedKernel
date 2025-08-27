@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Domain.Interfaces;
 using SharedKernel.Infrastructure.Interceptors;
 using SharedKernel.Infrastructure.Repositories;
+using SharedKernel.Repositories;
 
 namespace SharedKernel.Infrastructure;
 
