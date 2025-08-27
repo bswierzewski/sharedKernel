@@ -1,7 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageDescription>SharedKernel Domain - Core domain entities, value objects, and domain events for Clean Architecture applications</PackageDescription>
+    <PackageDescription>
+      SharedKernel Domain - Core domain entities, value objects, and domain events for Clean Architecture applications. 
+
+      USAGE:
+      • Inherit from Entity&lt;TId&gt; for domain entities
+      • Inherit from AggregateRoot&lt;TId&gt; for aggregate roots  
+      • Inherit from ValueObject for value objects
+      • Inherit from DomainEvent for domain events
+      • Use IRepository&lt;T&gt; interface in domain services
+      • Example: public class Order : AggregateRoot&lt;int&gt; { ... }
+    </PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

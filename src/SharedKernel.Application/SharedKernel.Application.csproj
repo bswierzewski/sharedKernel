@@ -1,7 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageDescription>SharedKernel Application - CQRS patterns, behaviors, and application services for Clean Architecture applications</PackageDescription>
+    <PackageDescription>
+      SharedKernel Application - CQRS patterns, behaviors, and application services for Clean Architecture applications.
+
+      USAGE:
+      • Add services.AddSharedKernelApplication() in Program.cs/Startup
+      • Implement IUser interface for user context
+      • Create command/query handlers using MediatR patterns
+      • Use built-in pipeline behaviors: Validation, Logging, Performance, Exception handling
+      • Example: builder.Services.AddSharedKernelApplication();
+    </PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +23,7 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageDescription>SharedKernel Infrastructure - Entity Framework interceptors, extensions, and infrastructure utilities for Clean Architecture applications</PackageDescription>
+    <PackageDescription>
+      SharedKernel Infrastructure - Entity Framework interceptors, extensions, and infrastructure utilities for Clean Architecture applications.
+
+      USAGE:
+      • Add services.AddSharedKernelInfrastructure() in Program.cs/Startup  
+      • Use services.AddRepositories&lt;YourDbContext&gt;() to register repositories
+      • Add optionsBuilder.AddInterceptors(serviceProvider) in DbContext configuration
+      • Automatic audit fields and domain events dispatch included
+      • Example: services.AddDbContext&lt;AppDbContext&gt;((sp, opt) =&gt; opt.AddInterceptors(sp));
+    </PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using SharedKernel.Interfaces;
 
 namespace SharedKernel.Specifications;
@@ -5,6 +6,7 @@ namespace SharedKernel.Specifications;
 /// <summary>
 /// Base implementation of the Specification pattern for composable business rules.
 /// Specifications encapsulate business rules and can be combined using logical operators.
+/// Supports both in-memory evaluation and Entity Framework Core database queries.
 /// </summary>
 /// <typeparam name="T">The type that this specification evaluates</typeparam>
 /// <remarks>
@@ -13,20 +15,33 @@ namespace SharedKernel.Specifications;
 /// - Composable using And, Or, Not operators
 /// - Testable in isolation
 /// - Improves code readability and maintainability
+/// - Works with both in-memory collections and EF Core IQueryable
 /// 
 /// Usage examples:
 /// var activeUser = new ActiveUserSpec();
 /// var adultUser = new AdultUserSpec();
 /// var eligibleUser = activeUser.And(adultUser);
+/// 
+/// // In-memory usage
+/// bool isValid = eligibleUser.IsSatisfiedBy(user);
+/// 
+/// // EF Core usage
+/// var query = context.Users.Where(eligibleUser.ToExpression());
 /// </remarks>
 public abstract class Specification<T> : ISpecification<T>
 {
     /// <summary>
-    /// Evaluates whether the given candidate satisfies this specification
+    /// Evaluates whether the given candidate satisfies this specification (in-memory evaluation)
     /// </summary>
     /// <param name="candidate">The object to evaluate</param>
     /// <returns>True if the candidate satisfies the specification; otherwise false</returns>
     public abstract bool IsSatisfiedBy(T candidate);
+
+    /// <summary>
+    /// Converts the specification to an Expression for use with Entity Framework Core
+    /// </summary>
+    /// <returns>An expression that can be used in LINQ queries</returns>
+    public abstract Expression<Func<T, bool>> ToExpression();
 
     /// <summary>
     /// Combines this specification with another using logical AND operator
@@ -58,12 +73,41 @@ public abstract class Specification<T> : ISpecification<T>
     }
 
     /// <summary>
-    /// Implicit conversion to Func for LINQ compatibility
+    /// Applies this specification to an IQueryable for database queries
+    /// </summary>
+    /// <param name="query">The queryable to filter</param>
+    /// <returns>A filtered queryable</returns>
+    public IQueryable<T> Apply(IQueryable<T> query)
+    {
+        return query.Where(ToExpression());
+    }
+
+    /// <summary>
+    /// Applies this specification to an IEnumerable for in-memory collections
+    /// </summary>
+    /// <param name="collection">The collection to filter</param>
+    /// <returns>A filtered collection</returns>
+    public IEnumerable<T> Apply(IEnumerable<T> collection)
+    {
+        return collection.Where(IsSatisfiedBy);
+    }
+
+    /// <summary>
+    /// Implicit conversion to Func for LINQ compatibility (in-memory)
     /// </summary>
     /// <param name="specification">The specification to convert</param>
     public static implicit operator Func<T, bool>(Specification<T> specification)
     {
         return specification.IsSatisfiedBy;
+    }
+
+    /// <summary>
+    /// Implicit conversion to Expression for EF Core compatibility
+    /// </summary>
+    /// <param name="specification">The specification to convert</param>
+    public static implicit operator Expression<Func<T, bool>>(Specification<T> specification)
+    {
+        return specification.ToExpression();
     }
 
     #region Composite Specifications
@@ -86,6 +130,19 @@ public abstract class Specification<T> : ISpecification<T>
         {
             return _left.IsSatisfiedBy(candidate) && _right.IsSatisfiedBy(candidate);
         }
+
+        public override Expression<Func<TItem, bool>> ToExpression()
+        {
+            var leftExpression = _left.ToExpression();
+            var rightExpression = _right.ToExpression();
+
+            var parameter = Expression.Parameter(typeof(TItem));
+            var leftBody = ReplaceParameter(leftExpression.Body, leftExpression.Parameters[0], parameter);
+            var rightBody = ReplaceParameter(rightExpression.Body, rightExpression.Parameters[0], parameter);
+
+            var body = Expression.AndAlso(leftBody, rightBody);
+            return Expression.Lambda<Func<TItem, bool>>(body, parameter);
+        }
     }
 
     /// <summary>
@@ -106,6 +163,19 @@ public abstract class Specification<T> : ISpecification<T>
         {
             return _left.IsSatisfiedBy(candidate) || _right.IsSatisfiedBy(candidate);
         }
+
+        public override Expression<Func<TItem, bool>> ToExpression()
+        {
+            var leftExpression = _left.ToExpression();
+            var rightExpression = _right.ToExpression();
+
+            var parameter = Expression.Parameter(typeof(TItem));
+            var leftBody = ReplaceParameter(leftExpression.Body, leftExpression.Parameters[0], parameter);
+            var rightBody = ReplaceParameter(rightExpression.Body, rightExpression.Parameters[0], parameter);
+
+            var body = Expression.OrElse(leftBody, rightBody);
+            return Expression.Lambda<Func<TItem, bool>>(body, parameter);
+        }
     }
 
     /// <summary>
@@ -123,6 +193,43 @@ public abstract class Specification<T> : ISpecification<T>
         public override bool IsSatisfiedBy(TItem candidate)
         {
             return !_specification.IsSatisfiedBy(candidate);
+        }
+
+        public override Expression<Func<TItem, bool>> ToExpression()
+        {
+            var expression = _specification.ToExpression();
+            var parameter = Expression.Parameter(typeof(TItem));
+            var body = ReplaceParameter(expression.Body, expression.Parameters[0], parameter);
+            var notBody = Expression.Not(body);
+            return Expression.Lambda<Func<TItem, bool>>(notBody, parameter);
+        }
+    }
+
+    /// <summary>
+    /// Helper method to replace parameter in expression trees for composition
+    /// </summary>
+    private static Expression ReplaceParameter(Expression expression, ParameterExpression oldParameter, ParameterExpression newParameter)
+    {
+        return new ParameterReplacer(oldParameter, newParameter).Visit(expression);
+    }
+
+    /// <summary>
+    /// Expression visitor to replace parameters in expression trees
+    /// </summary>
+    private class ParameterReplacer : ExpressionVisitor
+    {
+        private readonly ParameterExpression _oldParameter;
+        private readonly ParameterExpression _newParameter;
+
+        public ParameterReplacer(ParameterExpression oldParameter, ParameterExpression newParameter)
+        {
+            _oldParameter = oldParameter;
+            _newParameter = newParameter;
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            return node == _oldParameter ? _newParameter : base.VisitParameter(node);
         }
     }
 

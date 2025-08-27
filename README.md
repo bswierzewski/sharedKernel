@@ -1,8 +1,5 @@
 # SharedKernel
 
-[![Build Status](https://github.com/yourusername/SharedKernel/workflows/Publish%20NuGet%20Packages/badge.svg)](https://github.com/yourusername/SharedKernel/actions)
-[![NuGet](https://img.shields.io/nuget/v/SharedKernel.Domain.svg)](https://www.nuget.org/packages/SharedKernel.Domain/)
-
 Universal shared kernel components for .NET applications following Clean Architecture and Domain-Driven Design principles. Perfect for modular monoliths and microservices.
 
 ## 🚀 Quick Start - Modular Monolith Implementation

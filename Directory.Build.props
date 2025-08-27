@@ -7,18 +7,27 @@
     
     <!-- NuGet Package Properties -->
     <PackageId>$(MSBuildProjectName)</PackageId>
-    <Version>0.0.0</Version>
-    <Authors>SharedKernel Team</Authors>
-    <Company>SharedKernel</Company>
-    <Description>Universal shared kernel components for .NET applications following Clean Architecture and Domain-Driven Design principles</Description>
+    <Version>1.0.0</Version>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix Condition=" '$(Configuration)' == 'Debug' ">dev</VersionSuffix>
+    <Authors>bswierzewski</Authors>
+    <Company>bswierzewski</Company>
+    <Copyright>© 2025 bswierzewski. All rights reserved.</Copyright>
+    <Description>Shared kernel components for .NET applications built with Clean Architecture and Domain-Driven Design principles. Provides base classes for entities, aggregates, value objects, domain events, CQRS patterns, and EF Core infrastructure.</Description>
+    <PackageReleaseNotes>Initial release of SharedKernel components for Clean Architecture applications.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/bswierzewski/SharedKernel</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/bswierzewski/SharedKernel</PackageProjectUrl>
-    <PackageTags>shared-kernel;clean-architecture;ddd;domain-driven-design;cqrs;mediatr</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>shared-kernel;clean-architecture;ddd;domain-driven-design;cqrs;mediatr;entity-framework;dotnet</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\README.md" />
+  </ItemGroup>
 </Project>
