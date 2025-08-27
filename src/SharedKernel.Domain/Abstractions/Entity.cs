@@ -1,6 +1,6 @@
 using SharedKernel.Domain.Interfaces;
 
-namespace SharedKernel.Abstractions;
+namespace SharedKernel.Domain.Abstractions;
 
 /// <summary>
 /// Base entity class providing identity functionality and audit capabilities.

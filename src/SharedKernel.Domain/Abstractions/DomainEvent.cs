@@ -1,6 +1,6 @@
-using SharedKernel.Interfaces;
+using SharedKernel.Domain.Interfaces;
 
-namespace SharedKernel.Abstractions;
+namespace SharedKernel.Domain.Abstractions;
 
 /// <summary>
 /// Base implementation for domain events providing common properties and behavior.

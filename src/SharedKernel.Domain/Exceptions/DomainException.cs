@@ -1,4 +1,4 @@
-namespace SharedKernel.Exceptions;
+namespace SharedKernel.Domain.Exceptions;
 
 /// <summary>
 /// Base exception class for all domain-related exceptions.

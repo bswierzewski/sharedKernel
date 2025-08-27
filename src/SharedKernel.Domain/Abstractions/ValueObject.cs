@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Abstractions;
+﻿namespace SharedKernel.Domain.Abstractions;
 
 /// <summary>
 /// Base class for value objects in Domain-Driven Design.

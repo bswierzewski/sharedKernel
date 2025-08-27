@@ -1,8 +1,8 @@
-using System.Reflection;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Application.Behaviours;
+using System.Reflection;
 
 namespace SharedKernel.Application;
 

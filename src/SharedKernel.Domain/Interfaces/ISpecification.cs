@@ -1,4 +1,4 @@
-namespace SharedKernel.Interfaces;
+namespace SharedKernel.Domain.Interfaces;
 
 /// <summary>
 /// Interface for specification pattern implementation.

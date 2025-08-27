@@ -1,6 +1,7 @@
+using SharedKernel.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SharedKernel.Abstractions;
+namespace SharedKernel.Domain.Abstractions;
 
 /// <summary>
 /// Base aggregate root class providing domain events functionality and audit capabilities.
@@ -15,7 +16,7 @@ namespace SharedKernel.Abstractions;
 /// - Has global identity (unlike entities inside aggregate)
 /// - Controls access to internal entities
 /// </remarks>
-public abstract class AggregateRoot<TId> : Entity<TId>
+public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
 {
     /// <summary>
     /// Private collection storing domain events for this aggregate

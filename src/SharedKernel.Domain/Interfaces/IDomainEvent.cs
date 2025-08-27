@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SharedKernel.Interfaces;
+namespace SharedKernel.Domain.Interfaces;
 
 /// <summary>
 /// Interface defining contract for domain events in Domain-Driven Design

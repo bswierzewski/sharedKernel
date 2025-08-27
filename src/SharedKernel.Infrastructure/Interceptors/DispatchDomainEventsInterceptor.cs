@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using SharedKernel.Abstractions;
+using SharedKernel.Domain.Interfaces;
 
 namespace SharedKernel.Infrastructure.Interceptors;
 
@@ -34,14 +34,13 @@ public sealed class DispatchDomainEventsInterceptor : SaveChangesInterceptor
         if (context == null) return;
 
         var aggregates = context.ChangeTracker.Entries()
-            .Where(e => e.Entity is AggregateRoot<object>)
-            .Select(e => (AggregateRoot<object>)e.Entity)
+            .Where(e => e.Entity is IAggregateRoot)
+            .Select(e => (IAggregateRoot)e.Entity)
             .Where(aggregate => aggregate.DomainEvents.Any())
             .ToList();
 
         var domainEvents = aggregates
             .SelectMany(aggregate => aggregate.DomainEvents)
-            .Where(e => e is DomainEvent)
             .ToList();
 
         aggregates.ForEach(aggregate => aggregate.ClearDomainEvents());

@@ -1,7 +1,7 @@
+using SharedKernel.Domain.Interfaces;
 using System.Linq.Expressions;
-using SharedKernel.Interfaces;
 
-namespace SharedKernel.Specifications;
+namespace SharedKernel.Domain.Specifications;
 
 /// <summary>
 /// Base implementation of the Specification pattern for composable business rules.

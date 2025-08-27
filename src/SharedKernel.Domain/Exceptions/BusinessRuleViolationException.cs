@@ -1,4 +1,4 @@
-namespace SharedKernel.Exceptions;
+namespace SharedKernel.Domain.Exceptions;
 
 /// <summary>
 /// Exception thrown when a business rule is violated in the domain.

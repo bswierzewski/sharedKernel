@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Application.Interfaces;
+using System.Diagnostics;
 
 namespace SharedKernel.Application.Behaviours;
 
