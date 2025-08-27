@@ -51,8 +51,7 @@ jobs:
       - name: Pack NuGet package (Pre-release from main)
         if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v')
         run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          dotnet pack --configuration Release --no-build --output nupkg -p:VersionSuffix="preview-$TIMESTAMP"
+          dotnet pack --configuration Release --no-build --output nupkg -p:VersionSuffix="preview-${{ github.run_number }}"
 
       - name: Upload NuGet package as artifact
         uses: actions/upload-artifact@v4
