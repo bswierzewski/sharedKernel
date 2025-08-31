@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 
 namespace SharedKernel.Infrastructure.Data;
 
-
 /// <summary>
 /// Generic migration service that runs database migrations for a specific DbContext on startup.
 /// </summary>
@@ -29,9 +28,20 @@ public class MigrationService<TContext> : IHostedService
         try
         {
             var contextName = typeof(TContext).Name;
-            _logger.LogInformation("Starting {ContextName} database migration...", contextName);
-            await context.Database.MigrateAsync(cancellationToken);
-            _logger.LogInformation("{ContextName} database migration completed successfully", contextName);
+            _logger.LogInformation("Checking migrations for {ContextName}...", contextName);
+            
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync(cancellationToken);
+            if (pendingMigrations.Any())
+            {
+                _logger.LogInformation("Found {Count} pending migrations for {ContextName}: [{Migrations}]", 
+                    pendingMigrations.Count(), contextName, string.Join(", ", pendingMigrations));
+                await context.Database.MigrateAsync(cancellationToken);
+                _logger.LogInformation("{ContextName} database migrations applied successfully", contextName);
+            }
+            else
+            {
+                _logger.LogInformation("No pending migrations for {ContextName} - database is up to date", contextName);
+            }
         }
         catch (Exception ex)
         {
