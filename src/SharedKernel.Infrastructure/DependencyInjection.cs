@@ -29,6 +29,7 @@ public static class DependencyInjection
     public static IServiceCollection AddRepositories<TContext>(this IServiceCollection services) 
         where TContext : DbContext
     {
+        services.AddScoped<DbContext>(provider => provider.GetRequiredService<TContext>());
         services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
