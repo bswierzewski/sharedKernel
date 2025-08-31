@@ -9,12 +9,15 @@ namespace SharedKernel.Infrastructure.Repositories;
 /// Implements IRepository interface with standard database operations for any entity type.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity this repository manages</typeparam>
-public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class
+/// <typeparam name="TContext">The type of DbContext this repository operates with</typeparam>
+public class BaseRepository<TEntity, TContext> : IRepository<TEntity, TContext> 
+    where TEntity : class
+    where TContext : DbContext
 {
     /// <summary>
     /// Entity Framework database context for database operations
     /// </summary>
-    protected readonly DbContext Context;
+    protected readonly TContext Context;
     
     /// <summary>
     /// Entity Framework DbSet for the specific entity type
@@ -25,7 +28,7 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : clas
     /// Initializes a new instance of the BaseRepository with the specified database context
     /// </summary>
     /// <param name="context">Entity Framework database context</param>
-    public BaseRepository(DbContext context)
+    public BaseRepository(TContext context)
     {
         Context = context;
         DbSet = context.Set<TEntity>();

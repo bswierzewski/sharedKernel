@@ -20,7 +20,8 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// Adds repository and unit of work registrations for a specific DbContext
+    /// Adds repository and unit of work registrations for a specific DbContext.
+    /// Uses explicit typing to ensure type safety and prevent conflicts between multiple DbContext types.
     /// </summary>
     /// <typeparam name="TContext">The DbContext type</typeparam>
     /// <param name="services">Service collection</param>
@@ -29,7 +30,7 @@ public static class DependencyInjection
         where TContext : DbContext
     {
         services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
-        services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+        services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
         
         return services;
     }
