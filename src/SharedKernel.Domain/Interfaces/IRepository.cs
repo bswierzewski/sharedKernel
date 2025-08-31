@@ -6,8 +6,7 @@ namespace SharedKernel.Domain.Interfaces;
 /// Defines a generic repository interface for basic CRUD operations and querying.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity this repository manages</typeparam>
-/// <typeparam name="TContext">The type of context this repository operates with</typeparam>
-public interface IRepository<TEntity, TContext> 
+public interface IRepository<TEntity> 
     where TEntity : class
 {
     /// <summary>

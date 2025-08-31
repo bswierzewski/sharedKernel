@@ -30,7 +30,7 @@ public static class DependencyInjection
         where TContext : DbContext
     {
         services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
-        services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
+        services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<,>));
         
         return services;
     }

@@ -10,7 +10,7 @@ namespace SharedKernel.Infrastructure.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">The type of entity this repository manages</typeparam>
 /// <typeparam name="TContext">The type of DbContext this repository operates with</typeparam>
-public class BaseRepository<TEntity, TContext> : IRepository<TEntity, TContext> 
+public class BaseRepository<TEntity, TContext> : IRepository<TEntity> 
     where TEntity : class
     where TContext : DbContext
 {
