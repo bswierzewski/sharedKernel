@@ -1,6 +1,6 @@
 using SharedKernel.Domain.Abstractions;
 
-namespace SharedKernel.Domain.Interfaces;
+namespace SharedKernel.Domain.Abstractions;
 
 /// <summary>
 /// Interface for aggregate root entities that manage domain events.

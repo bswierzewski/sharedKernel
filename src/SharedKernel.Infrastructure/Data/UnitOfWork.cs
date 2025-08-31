@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using SharedKernel.Domain.Interfaces;
+using SharedKernel.Domain.Abstractions;
 
-namespace SharedKernel.Repositories;
+namespace SharedKernel.Infrastructure.Data;
 
 /// <summary>
 /// Generic implementation of Unit of Work pattern using Entity Framework Core.

@@ -1,21 +1,23 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using SharedKernel.Domain.Interfaces;
+using SharedKernel.Domain.Abstractions;
 
-namespace SharedKernel.Infrastructure.Repositories;
+namespace SharedKernel.Infrastructure.Data;
 
 /// <summary>
 /// Base repository implementation providing generic CRUD operations using Entity Framework Core.
 /// Implements IRepository interface with standard database operations for any entity type.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity this repository manages</typeparam>
-public class BaseRepository<TEntity> : IRepository<TEntity> 
-    where TEntity : class
+/// <typeparam name="TContext">The type of DbContext this repository uses</typeparam>
+public class BaseRepository<TEntity, TContext> : IRepository<TEntity> 
+    where TEntity : class, IAggregateRoot
+    where TContext : DbContext
 {
     /// <summary>
     /// Entity Framework database context for database operations
     /// </summary>
-    protected readonly DbContext Context;
+    protected readonly TContext Context;
     
     /// <summary>
     /// Entity Framework DbSet for the specific entity type
@@ -26,7 +28,7 @@ public class BaseRepository<TEntity> : IRepository<TEntity>
     /// Initializes a new instance of the BaseRepository with the specified database context
     /// </summary>
     /// <param name="context">Entity Framework database context</param>
-    public BaseRepository(DbContext context)
+    public BaseRepository(TContext context)
     {
         Context = context;
         DbSet = context.Set<TEntity>();

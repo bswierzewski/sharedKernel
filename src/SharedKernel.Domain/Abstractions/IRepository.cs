@@ -1,13 +1,13 @@
 using System.Linq.Expressions;
 
-namespace SharedKernel.Domain.Interfaces;
+namespace SharedKernel.Domain.Abstractions;
 
 /// <summary>
 /// Defines a generic repository interface for basic CRUD operations and querying.
 /// </summary>
 /// <typeparam name="TEntity">The type of entity this repository manages</typeparam>
 public interface IRepository<TEntity> 
-    where TEntity : class
+    where TEntity : IAggregateRoot
 {
     /// <summary>
     /// Gets an entity by its identifier.

@@ -1,4 +1,4 @@
-namespace SharedKernel.Domain.Interfaces;
+namespace SharedKernel.Domain.Abstractions;
 
 /// <summary>
 /// Defines a unit of work pattern that maintains a list of objects affected by a business transaction 

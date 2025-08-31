@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Domain.Interfaces;
 using SharedKernel.Infrastructure.Interceptors;
-using SharedKernel.Infrastructure.Repositories;
-using SharedKernel.Repositories;
 
 namespace SharedKernel.Infrastructure;
 
@@ -19,22 +16,6 @@ public static class DependencyInjection
         return services;
     }
 
-    /// <summary>
-    /// Adds repository and unit of work registrations for a specific DbContext.
-    /// Uses explicit typing to ensure type safety and prevent conflicts between multiple DbContext types.
-    /// </summary>
-    /// <typeparam name="TContext">The DbContext type</typeparam>
-    /// <param name="services">Service collection</param>
-    /// <returns>Service collection for chaining</returns>
-    public static IServiceCollection AddRepositories<TContext>(this IServiceCollection services) 
-        where TContext : DbContext
-    {
-        services.AddScoped<DbContext>(provider => provider.GetRequiredService<TContext>());
-        services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
-        services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-
-        return services;
-    }
 
     /// <summary>
     /// Configures DbContext with SharedKernel interceptors
