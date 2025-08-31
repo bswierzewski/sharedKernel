@@ -30,6 +30,16 @@ public class ModuleContextBuilder<TContext> where TContext : DbContext
             new BaseRepository<TEntity, TContext>(provider.GetRequiredService<TContext>()));
         return this;
     }
+
+    /// <summary>
+    /// Registers a migration service for the module's DbContext.
+    /// The service will automatically run migrations on application startup.
+    /// </summary>
+    public ModuleContextBuilder<TContext> AddMigrations()
+    {
+        Services.AddHostedService<MigrationService<TContext>>();
+        return this;
+    }
 }
 
 public static class DependencyInjection
