@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Domain.Interfaces;
 using SharedKernel.Infrastructure.Interceptors;
-using SharedKernel.Infrastructure.Repositories;
 using SharedKernel.Repositories;
 
 namespace SharedKernel.Infrastructure;
@@ -29,8 +28,7 @@ public static class DependencyInjection
     public static IServiceCollection AddRepositories<TContext>(this IServiceCollection services) 
         where TContext : DbContext
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
-        services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<,>));
+        services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();       
         
         return services;
     }
